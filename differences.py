@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 # deletions are returned in vcf style i. e. number of residue right before deletion "-" as reference and insertion as
 # alt
-def diff(ref: str, alt: str, thr: int = 20) -> List[Tuple[int, int, str, str]]:
+def diff(ref: str, alt: str, thr: int = 0) -> List[Tuple[int, int, str, str]]:
     aln = pairwise2.align.globalxx(ref, alt)[0]
 
     if aln.score < thr:
@@ -29,7 +29,6 @@ def diff(ref: str, alt: str, thr: int = 20) -> List[Tuple[int, int, str, str]]:
         res2: str = aln.seqB[aln_i]
 
         if res1 != "-" and ref_gap:
-            print(insertion)
             out.append((ref_gap_start, ref_gap_start, "-", insertion))
             ref_gap = False
             insertion = ""
@@ -65,4 +64,4 @@ def diff(ref: str, alt: str, thr: int = 20) -> List[Tuple[int, int, str, str]]:
     return out
 
 
-print(diff("ATG", "CTG"))
+print(diff("ACATATGATA", "ACATGTGATA"))
