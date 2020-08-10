@@ -1,11 +1,15 @@
 from Bio import pairwise2
 from typing import List, Tuple
+from Bio.SubsMat import MatrixInfo as matlist
+
+matrix = matlist.blosum62
 
 
 # deletions are returned in vcf style i. e. number of residue right before deletion "-" as reference and insertion as
 # alt
+
 def diff(ref: str, alt: str, thr: int = 0) -> List[Tuple[int, int, str, str]]:
-    aln = pairwise2.align.globalxx(ref, alt)[0]
+    aln = pairwise2.align.globalds(ref, alt, matrix, -10, -0.5)[0]
 
     if aln.score < thr:
         return []
@@ -63,5 +67,3 @@ def diff(ref: str, alt: str, thr: int = 0) -> List[Tuple[int, int, str, str]]:
 
     return out
 
-
-print(diff("ACATATGATA", "ACATGTGATA"))
